@@ -12,6 +12,7 @@ BUTTONS = {
     1: 69,
     2: 70,
     'OK': 28,
+    '#': 13,
 }
 
 # Import the library
@@ -121,11 +122,21 @@ def key_combo(*keys):
 
 def read_serial_main():
     while True:
-        line = int(myPySerial.readline().strip())
-        if line == BUTTONS[0]:
-            key_combo(VK_LWIN, ord('D'))
-        elif line == BUTTONS['OK']:
-            key_combo(VK_MEDIA_PLAY_PAUSE)
+        line = int(myPySerial.readline())
+        print('received value:', repr(line))
+        try:
+            #line = int(line.strip())
+            if line == BUTTONS[0]:
+                key_combo(VK_LWIN, ord('D'))
+            elif line == BUTTONS['OK']:
+                key_combo(VK_MEDIA_PLAY_PAUSE)
+            elif line == BUTTONS['#']:
+                ctypes.windll.user32.LockWorkStation()
+            else:
+                print('doing nothing')
+        except Exception as e:
+            print(e)
+            continue
 
 
 if __name__ == "__main__":
